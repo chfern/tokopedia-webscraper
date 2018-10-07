@@ -2,3 +2,4 @@ geckodriver.log
 .vscode/
 venv/
 *__pycache__/
+ghostdriver.log
