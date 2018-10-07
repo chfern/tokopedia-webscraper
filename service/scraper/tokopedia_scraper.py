@@ -99,7 +99,7 @@ class TokopediaScraper:
 
                 offers_elem = product_cell.find("div", {"itemprop": "offers"})
                 offers_detail_elems = offers_elem.find_all("div")
-                if len(offers_detail_elems) > 3 :
+                if len(offers_detail_elems) >= 3 :
                     place_elems = offers_detail_elems[2]
                     product_location = place_elems.find_all("span")[0].text
                     shop_name = place_elems.find_all("span")[1].text
@@ -111,7 +111,7 @@ class TokopediaScraper:
                 if details_elem:
                     product_detailurl = details_elem.attrs['href']
 
-                product_image_url = non_promo_images[index].attrs['src']
+                product_img_url = non_promo_images[index].attrs['src']
 
                 print("NonPromo Item : {}".format([
                     product_title, product_price, product_location, shop_name, rating, product_img_url, product_detailurl
