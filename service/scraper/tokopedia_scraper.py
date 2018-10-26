@@ -14,6 +14,8 @@ from service.dom import scrollscan_page
 class TokopediaScraper:
     base_url = 'https://www.tokopedia.com'
     folder_name = "tokopedia"
+    max_page = 30
+
     def _scrap_page_promo_item(self, soup):
         item_list = []
         all_promo_items = soup.find_all("div", {"class": "ta-product"})
@@ -143,7 +145,7 @@ class TokopediaScraper:
         curr_page = 1
 
         has_next_page = True
-        while has_next_page :
+        while has_next_page and curr_page < TokopediaScraper.max_page :
             WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "fe-discovery-root")))
             scrollscan_page(driver)
 
