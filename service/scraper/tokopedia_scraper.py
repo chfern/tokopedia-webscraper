@@ -6,6 +6,7 @@ from service.driver.firefox import FirefoxDriver
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from common.base.item import Item
 from bs4 import BeautifulSoup
 import re
 
@@ -14,7 +15,10 @@ from service.dom import scrollscan_page
 class TokopediaScraper:
     base_url = 'https://www.tokopedia.com'
     folder_name = "tokopedia"
-    max_page = 30
+    max_page = 10
+
+    def __init__(self, min_price_threshold):
+        self.min_price_threshold = min_price_threshold
 
     def _scrap_page_promo_item(self, soup):
         item_list = []
@@ -57,13 +61,8 @@ class TokopediaScraper:
 
                 product_detailurl_elem = all_promo_items[0].find("div", {"class": "ta-product-wrapper"})
                 product_detailurl = product_detailurl_elem.find_all("a")[1].attrs['href']
-
-                print("Promo Item : {}".format([
-                    product_title, product_price, product_location, shop_name, rating, product_img_url, product_detailurl
-                ]))
-                item_list.append([
-                    product_title, product_price, product_location, shop_name, rating, product_img_url, product_detailurl
-                ])
+                if(product_price >= self.min_price_threshold):
+                    item_list.append(Item(product_title, product_price, shop_name, product_img_url, product_detailurl, product_location, rating))
             except Exception as e:
                 print(e)
 
@@ -114,13 +113,8 @@ class TokopediaScraper:
                     product_detailurl = details_elem.attrs['href']
 
                 product_img_url = non_promo_images[index].attrs['src']
-
-                print("NonPromo Item : {}".format([
-                    product_title, product_price, product_location, shop_name, rating, product_img_url, product_detailurl
-                ]))
-                item_list.append([
-                    product_title, product_price, product_location, shop_name, rating, product_img_url, product_detailurl
-                ])
+                if(product_price >= self.min_price_threshold):
+                    item_list.append(Item(product_title, product_price, shop_name, product_img_url, product_detailurl, product_location, rating))
             except Exception as e:
                 print(e)
 
